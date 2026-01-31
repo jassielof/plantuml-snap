@@ -4,7 +4,7 @@ description: PlantUML is a component that allows you to create various UML diagr
 summary: Create UML diagrams and other type of diagrams directly from plain text.
 
 base: core24
-contact: "[jassielovando@protonmail.com, https://github.com/jassielof/plantuml-snap]"
+contact: [jassielovando@protonmail.com, https://github.com/jassielof/plantuml-snap]
 website: https://plantuml.com/
 source-code: "https://github.com/jassielof/plantuml-snap"
 issues: "https://github.com/jassielof/plantuml-snap/issues"
