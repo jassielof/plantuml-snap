@@ -1,0 +1,18 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build snap
+        id: build-snap
+        uses: snapcore/action-build@master
+      - name: Install snap
+        run: sudo snap install --dangerous ${{ steps.build-snap.outputs.snap }}
+      - name: Test PlantUML CLI
+        run: |
+          plantuml --version
+          plantuml --check-graphviz
+          plantuml --svg tests/license.plantuml

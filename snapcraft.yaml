@@ -1,0 +1,45 @@
+name: plantuml
+base: core24
+contact: jassielovando@protonmail.com
+title: PlantUML
+license: GPL-3.0+
+icon: assets/images/icon.svg
+website: https://plantuml.com/
+description: PlantUML is a component that allows you to create various UML diagrams through simple textual descriptions. From sequence diagrams to deployment diagrams and beyond, PlantUML provides an easy way to create visual representations of complex systems.
+grade: stable
+
+confinement: strict
+
+apps:
+  plantuml:
+    command: bin/plantuml-launcher
+    plugs:
+      - home
+      - removable-media
+      - network
+    environment:
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+      PATH: $SNAP/usr/lib/jvm/java-11-openjdk/bin:$PATH
+  plantuml-gui:
+    command: bin/plantuml-gui-launcher
+    extensions: [gnome]
+    plugs:
+      - home
+      - removable-media
+      - network
+      - x11
+      - wayland
+      - desktop
+      - desktop-legacy
+      - unity7
+      - opengl
+    environment:
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+      PATH: $SNAP/usr/lib/jvm/java-11-openjdk/bin:$PATH
+      _JAVA_OPTIONS: "-Dsun.java2d.xrender=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+
+parts:
+  plantuml-jar:
+
+version: "1.2026.1"
+summary: PlantUML is a tool that allows you to create various UML diagrams and more.
