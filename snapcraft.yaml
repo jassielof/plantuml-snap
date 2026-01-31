@@ -52,7 +52,7 @@ apps:
 parts:
   plantuml:
     plugin: nil
-    # source: https://github.com/plantuml/plantuml
+    source: .
     # source-type: git
     # source-tag: v$SNAPCRAFT_PROJECT_VERSION
     build-packages:
