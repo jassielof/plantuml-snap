@@ -1,45 +1,74 @@
-name: plantuml
-base: core24
-contact: jassielovando@protonmail.com
 title: PlantUML
+name: plantuml
+description: PlantUML is a component that allows you to create various UML diagrams through simple textual descriptions. From sequence diagrams to deployment diagrams and beyond, PlantUML provides an easy way to create visual representations of complex systems.
+summary: Create UML diagrams and other type of diagrams directly from plain text.
+
+base: core24
+contact: "[jassielovando@protonmail.com, https://github.com/jassielof/plantuml-snap]"
+website: https://plantuml.com/
+source-code: "https://github.com/jassielof/plantuml-snap"
+issues: "https://github.com/jassielof/plantuml-snap/issues"
+version: "1.2026.1"
 license: GPL-3.0+
 icon: assets/images/icon.svg
-website: https://plantuml.com/
-description: PlantUML is a component that allows you to create various UML diagrams through simple textual descriptions. From sequence diagrams to deployment diagrams and beyond, PlantUML provides an easy way to create visual representations of complex systems.
-grade: stable
 
+grade: stable
 confinement: strict
+
+platforms:
+  amd64:
+  arm64:
 
 apps:
   plantuml:
-    command: bin/plantuml-launcher
+    command: bin/plantuml-wrapper
     plugs:
       - home
       - removable-media
       - network
     environment:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
-      PATH: $SNAP/usr/lib/jvm/java-11-openjdk/bin:$PATH
+      JAVA_HOME: $SNAP/java
+      PATH: $SNAP/java/bin:$SNAP/usr/bin:$PATH
+
   plantuml-gui:
-    command: bin/plantuml-gui-launcher
+    command: bin/plantuml-gui-wrapper --gui
+    desktop: share/applications/plantuml.desktop
     extensions: [gnome]
     plugs:
       - home
       - removable-media
       - network
-      - x11
-      - wayland
       - desktop
       - desktop-legacy
+      - x11
+      - wayland
       - unity7
       - opengl
     environment:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
-      PATH: $SNAP/usr/lib/jvm/java-11-openjdk/bin:$PATH
-      _JAVA_OPTIONS: "-Dsun.java2d.xrender=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+      JAVA_HOME: $SNAP/java
+      PATH: $SNAP/java/bin:$SNAP/usr/bin:$PATH
+      _JAVA_OPTIONS: "-Duser.home=$SNAP_USER_DATA -Djava.util.prefs.userRoot=$SNAP_USER_DATA/.java/.userPrefs"
 
 parts:
-  plantuml-jar:
+  plantuml:
+    plugin:
+    source: https://github.com/plantuml/plantuml
+    source-type: git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSIONS
+    build-packages:
+      - curl
+    stage-packages:
+      - openjdk-25-jre
+      - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz
 
-version: "1.2026.1"
-summary: PlantUML is a tool that allows you to create various UML diagrams and more.
+    override-build: |
+      bash scripts/build.bash
+  plantuml-gui:
+    plugin: dump
+    source: .
+    organize:
+      assets/gui/plantuml.desktop: share/applications/plantuml.desktop
+      assets/images/icon.svg: share/icons/hicolor/scalable/apps/plantuml.svg
+    stage:
+      - share/applications/plantuml.desktop
+      - share/icons/hicolor/scalable/apps/plantuml.svg

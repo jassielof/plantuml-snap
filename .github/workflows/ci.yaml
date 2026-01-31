@@ -15,7 +15,7 @@ jobs:
         run: |
           plantuml --version
           plantuml --check-graphviz
-          plantuml --svg tests/license.plantuml
+          plantuml --svg tests/*.puml
 
       - name: Verify SVG output
         run: |

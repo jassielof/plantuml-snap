@@ -1,1 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=PlantUML
+Comment=Create UML diagrams from textual descriptions
+Exec=plantuml
+Type=Application
+Terminal=false
+Icon=plantuml.svg
+Categories=Graphics;VectorGraphics;Development;Documentation;
+Keywords=uml;diagram;chart;drawing;plantuml;sequence;flowchart;
+MimeType=text/plain;text/x-plantuml;
+StartupNotify=true
+StartupWMClass=plantuml
 
