@@ -16,3 +16,19 @@ jobs:
           plantuml --version
           plantuml --check-graphviz
           plantuml --svg tests/license.plantuml
+
+      - name: Verify SVG output
+        run: |
+          if [ ! -f tests/license.svg ]; then
+            echo "SVG output file not found!"
+            exit 1
+          fi
+
+          echo "SVG output file generated successfully."
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: snap-package
+          path: |
+            *.snap
+            tests/*.svg
