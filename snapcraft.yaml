@@ -73,6 +73,8 @@ parts:
       - libpango-1.0-0
       - libpangocairo-1.0-0
       - libgts-0.7-5
+    autotools-configure-parameters:
+      - --prefix=/usr
   plantuml:
     plugin: nil
     after: [graphviz]
