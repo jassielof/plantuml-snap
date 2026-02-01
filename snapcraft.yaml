@@ -30,8 +30,9 @@ apps:
       - removable-media
       - network
     environment:
-      JAVA_HOME: $SNAP/java
-      PATH: $SNAP/java/bin:$SNAP/usr/bin:$PATH
+      # JAVA_HOME: $SNAP/java
+      PATH: $SNAP/usr/bin:$PATH
+      GRAPHVIZ_DOT: $SNAP/usr/bin/dot
 
   plantuml-gui:
     command: bin/plantuml-gui-wrapper --gui
@@ -48,8 +49,9 @@ apps:
       - unity7
       - opengl
     environment:
-      JAVA_HOME: $SNAP/java
-      PATH: $SNAP/java/bin:$SNAP/usr/bin:$PATH
+      PATH: $SNAP/usr/bin:$PATH
+      GRAPHVIZ_DOT: $SNAP/usr/bin/dot
+      # JAVA_HOME: $SNAP/java
       _JAVA_OPTIONS: "-Duser.home=$SNAP_USER_DATA -Djava.util.prefs.userRoot=$SNAP_USER_DATA/.java/.userPrefs"
 
 parts:
@@ -88,8 +90,7 @@ parts:
       - openjdk-25-jre
       # - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz and core26 will finally update it.
 
-    override-build: |
-      bash scripts/build.bash
+    override-build: bash scripts/build.bash
   plantuml-gui:
     plugin: dump
     source: .

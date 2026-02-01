@@ -14,5 +14,3 @@ cp scripts/plantuml-gui.bash $SNAPCRAFT_PART_INSTALL/bin/plantuml-gui-wrapper
 
 chmod +x $SNAPCRAFT_PART_INSTALL/bin/plantuml-wrapper
 chmod +x $SNAPCRAFT_PART_INSTALL/bin/plantuml-gui-wrapper
-
-
