@@ -29,15 +29,17 @@ apps:
       - home
       - removable-media
       - network
+      - desktop
     environment:
-      # JAVA_HOME: $SNAP/java
-      PATH: $SNAP/usr/bin:$PATH
+      PATH: $SNAP/usr/bin:$SNAP/usr/lib/jvm/java-25-openjdk-$CRAFT_ARCH_BUILD_FOR/bin:$PATH
       GRAPHVIZ_DOT: $SNAP/usr/bin/dot
 
   plantuml-gui:
-    command: bin/plantuml-gui-wrapper --gui
+    command: bin/plantuml-gui-wrapper
+    common-id: plantuml.deskttop
     desktop: share/applications/plantuml.desktop
-    extensions: [gnome]
+    extensions:
+      - gnome-46-2404
     plugs:
       - home
       - removable-media
@@ -49,10 +51,8 @@ apps:
       - unity7
       - opengl
     environment:
-      PATH: $SNAP/usr/bin:$PATH
+      PATH: $SNAP/usr/bin:$SNAP/usr/lib/jvm/java-25-openjdk-$CRAFT_ARCH_BUILD_FOR/bin:$PATH
       GRAPHVIZ_DOT: $SNAP/usr/bin/dot
-      # JAVA_HOME: $SNAP/java
-      _JAVA_OPTIONS: "-Duser.home=$SNAP_USER_DATA -Djava.util.prefs.userRoot=$SNAP_USER_DATA/.java/.userPrefs"
 
 parts:
   graphviz:

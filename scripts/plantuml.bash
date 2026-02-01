@@ -1,8 +1,14 @@
 #!/bin/bash
 set -e
 
-# Set user home to writable location for Java preferences and config
-# export _JAVA_OPTIONS="-Duser.home=$SNAP_USER_DATA -Djava.util.prefs.systemRoot=$SNAP_USER_DATA/.java -Djava.util.prefs.userRoot=$SNAP_USER_DATA/.java/.userPrefs"
+# Setup Java environment
+export JAVA_HOME="$SNAP/usr/lib/jvm/java-25-openjdk-${SNAP_ARCH}"
+export PATH="$JAVA_HOME/bin:$PATH"
 
-# Execute PlantUML with all arguments passed through
-exec java -jar $SNAP/jar/plantuml.jar "$@"
+# Ensure Graphviz is found
+export GRAPHVIZ_DOT="$SNAP/usr/bin/dot"
+
+# Redirect Java preferences to writable location
+export _JAVA_OPTIONS="-Duser.home=$SNAP_USER_DATA -Djava.util.prefs.userRoot=$SNAP_USER_DATA/.java/.userPrefs"
+
+exec java -jar "$SNAP/jar/plantuml.jar" "$@"
