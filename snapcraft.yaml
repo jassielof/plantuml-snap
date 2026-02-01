@@ -39,7 +39,7 @@ apps:
     common-id: plantuml.deskttop
     desktop: share/applications/plantuml.desktop
     extensions:
-      - gnome-46-2404
+      - gnome
     plugs:
       - home
       - removable-media
