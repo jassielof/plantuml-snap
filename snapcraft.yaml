@@ -36,7 +36,7 @@ apps:
 
   plantuml-gui:
     command: bin/plantuml-gui-wrapper
-    common-id: plantuml.deskttop
+    common-id: plantuml.desktop
     desktop: share/applications/plantuml.desktop
     extensions:
       - gnome
@@ -55,55 +55,129 @@ apps:
       GRAPHVIZ_DOT: $SNAP/usr/bin/dot
 
 parts:
-  # graphviz:
-  #   plugin: autotools
-  #   source-depth: 1
-  #   source: https://gitlab.com/graphviz/graphviz.git
-  #   source-tag: "14.1.2"
-  #   build-packages:
-  #     - build-essential
-  #     - cmake
-  #     - bison
-  #     - flex
-  #     - libexpat1-dev
-  #     - libgd-dev
-  #     - libcairo2-dev
-  #     - libpango1.0-dev
-  #     - libgts-dev
-  #     - pkg-config
-  #     - libfontconfig1-dev
-  #   stage-packages:
-  #     - libexpat1
-  #     - libgd3
-  #     - libcairo2
-  #     - libpango-1.0-0
-  #     - libpangocairo-1.0-0
-  #     - libgts-0.7-5
-  #     - libfontconfig1
-  #     - fontconfig-config
-  #     - fonts-dejavu-core
-  #     - fonts-liberation
-  #     - libfreetype6
-  #     - libpng16-16
-  #     - libx11-6
-  #     - libxrender1
-  #     - libxext6
-  #   autotools-configure-parameters:
-  #     - --prefix=/usr
-  #     - --with-cairo=yes
-  #     - --with-pangocairo=yes
-  #     - --enable-shared
+  graphviz:
+    plugin: autotools
+    source-depth: 1
+    source: https://gitlab.com/graphviz/graphviz.git
+    source-tag: "14.1.2"
+    build-packages:
+      - build-essential
+      - cmake
+      - bison
+      - flex
+      - libexpat1-dev
+      - libgd-dev
+      - libcairo2-dev
+      - libpango1.0-dev
+      - libgts-dev
+      - pkg-config
+      - libfontconfig1-dev
+    stage-packages:
+      - libexpat1
+      - libgd3
+      - libcairo2
+      - libpango-1.0-0
+      - libpangocairo-1.0-0
+      - libgts-0.7-5
+      - libfontconfig1
+      - fontconfig-config
+      - fonts-dejavu-core
+      - fonts-liberation
+      - libfreetype6
+      - libpng16-16
+      - libx11-6
+      - libxrender1
+      - libxext6
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --with-cairo=yes
+      - --with-pangocairo=yes
+      - --enable-shared
+    override-build: |
+      # Run the default autotools build
+      craftctl default
+
+      # Set LD_LIBRARY_PATH so dot can find its libraries
+      export LD_LIBRARY_PATH="$CRAFT_PART_INSTALL/usr/lib:$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_BUILD_FOR:$LD_LIBRARY_PATH"
+
+      # Create the config directory and generate plugin config
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_BUILD_FOR/graphviz
+      $CRAFT_PART_INSTALL/usr/bin/dot -c
+
+      # Copy generated config files to install directory
+      if [ -f /usr/lib/$CRAFT_ARCH_BUILD_FOR/graphviz/config8 ]; then
+        cp /usr/lib/$CRAFT_ARCH_BUILD_FOR/graphviz/config8 \
+           $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_BUILD_FOR/graphviz/
+      fi
+      if [ -f /usr/lib/graphviz/config8 ]; then
+        mkdir -p $CRAFT_PART_INSTALL/usr/lib/graphviz
+        cp /usr/lib/graphviz/config8 $CRAFT_PART_INSTALL/usr/lib/graphviz/
+      fi
+
+      # Verify the config was created
+      find $CRAFT_PART_INSTALL -name "config*" -type f 2>/dev/null || echo "Warning: No config files found"
+
   plantuml:
     plugin: nil
-    # after: [graphviz]
+    after: [graphviz]
     source: .
     build-packages:
       - curl
     stage-packages:
       - openjdk-25-jre
-      - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz and core26 will finally update it.
+      - fontconfig
+      - fontconfig-config
+      - fonts-dejavu-core
+      # - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz and core26 will finally update it.
 
-    override-build: bash scripts/build.bash
+    override-build: |
+      curl -L -o plantuml.jar "https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar"
+
+      if [ ! -f plantuml.jar ]; then
+          echo "Failed to download PlantUML JAR file."
+          exit 1
+      fi
+
+      mkdir -p $SNAPCRAFT_PART_INSTALL/{jar,bin}
+
+      cp plantuml.jar $SNAPCRAFT_PART_INSTALL/jar/plantuml.jar
+
+      cat > $SNAPCRAFT_PART_INSTALL/bin/plantuml-wrapper << 'EOF'
+      #!/bin/bash
+      set -e
+
+      # Setup Java environment
+      export JAVA_HOME="$SNAP/usr/lib/jvm/java-25-openjdk-${SNAP_ARCH}"
+      export PATH="$JAVA_HOME/bin:$PATH"
+
+      # Ensure Graphviz is found
+      export GRAPHVIZ_DOT="$SNAP/usr/bin/dot"
+
+      # Redirect Java preferences to writable location
+      export _JAVA_OPTIONS="-Duser.home=$SNAP_USER_DATA -Djava.util.prefs.userRoot=$SNAP_USER_DATA/.java/.userPrefs"
+
+      exec java -jar "$SNAP/jar/plantuml.jar" "$@"
+      EOF
+
+      cat > $SNAPCRAFT_PART_INSTALL/bin/plantuml-gui-wrapper << 'EOF'
+      #!/bin/bash
+      set -e
+
+      # Setup Java environment
+      export JAVA_HOME="$SNAP/usr/lib/jvm/java-25-openjdk-${SNAP_ARCH}"
+      export PATH="$JAVA_HOME/bin:$PATH"
+
+      export GRAPHVIZ_DOT="$SNAP/usr/bin/dot"
+
+      # GUI-specific Java options for better font rendering
+      export _JAVA_OPTIONS="-Duser.home=$SNAP_USER_DATA -Djava.util.prefs.userRoot=$SNAP_USER_DATA/.java/.userPrefs -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+
+      exec java -jar "$SNAP/jar/plantuml.jar" --gui "$@"
+      EOF
+
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/plantuml-wrapper
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/plantuml-gui-wrapper
+
   plantuml-gui:
     plugin: dump
     source: .

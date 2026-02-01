@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - sudo snap remove plantuml
+      - rm plantuml*.snap || true
+      - sudo snapcraft pack --use-lxd
+      - sudo snap install --dangerous plantuml_*.snap
+  test:
+    deps:
+      - build
+    cmds:
+      - snap run plantuml --verbose --version
+      - snap run plantuml --verbose --check-graphviz
