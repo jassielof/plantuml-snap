@@ -5,7 +5,9 @@ summary: Create UML diagrams and other type of diagrams directly from plain text
 
 base: core24
 contact:
-  [jassielovando@protonmail.com, https://github.com/jassielof/plantuml-snap]
+  - jassielovando@protonmail.com
+  - https://github.com/jassielof/plantuml-snap
+donation: https://github.com/plantuml/plantuml # On sponsor
 website: https://plantuml.com/
 source-code: "https://github.com/jassielof/plantuml-snap"
 issues: "https://github.com/jassielof/plantuml-snap/issues"
@@ -53,6 +55,7 @@ apps:
 parts:
   graphviz:
     plugin: autotools
+    source-depth: 1
     source: https://gitlab.com/graphviz/graphviz.git
     source-tag: "12.2.1"
     build-packages:
@@ -79,13 +82,11 @@ parts:
     plugin: nil
     after: [graphviz]
     source: .
-    # source-type: git
-    # source-tag: v$SNAPCRAFT_PROJECT_VERSION
     build-packages:
       - curl
     stage-packages:
       - openjdk-25-jre
-      # - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz
+      # - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz and core26 will finally update it.
 
     override-build: |
       bash scripts/build.bash

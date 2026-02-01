@@ -11,4 +11,3 @@ Keywords=uml;diagram;chart;drawing;plantuml;sequence;flowchart;
 MimeType=text/plain;text/x-plantuml;
 StartupNotify=true
 StartupWMClass=plantuml
-
