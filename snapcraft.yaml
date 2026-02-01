@@ -59,7 +59,7 @@ parts:
     plugin: autotools
     source-depth: 1
     source: https://gitlab.com/graphviz/graphviz.git
-    source-tag: "12.2.1"
+    source-tag: "14.1.2"
     build-packages:
       - build-essential
       - cmake
