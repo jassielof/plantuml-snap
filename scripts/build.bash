@@ -1,8 +1,8 @@
 curl -L -o plantuml.jar "https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar"
 
 if [ ! -f plantuml.jar ]; then
-echo "Failed to download PlantUML JAR file."
-exit 1
+    echo "Failed to download PlantUML JAR file."
+    exit 1
 fi
 
 mkdir -p $SNAPCRAFT_PART_INSTALL/{jar,bin}
