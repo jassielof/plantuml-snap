@@ -55,53 +55,53 @@ apps:
       GRAPHVIZ_DOT: $SNAP/usr/bin/dot
 
 parts:
-  graphviz:
-    plugin: autotools
-    source-depth: 1
-    source: https://gitlab.com/graphviz/graphviz.git
-    source-tag: "14.1.2"
-    build-packages:
-      - build-essential
-      - cmake
-      - bison
-      - flex
-      - libexpat1-dev
-      - libgd-dev
-      - libcairo2-dev
-      - libpango1.0-dev
-      - libgts-dev
-      - pkg-config
-      - libfontconfig1-dev
-    stage-packages:
-      - libexpat1
-      - libgd3
-      - libcairo2
-      - libpango-1.0-0
-      - libpangocairo-1.0-0
-      - libgts-0.7-5
-      - libfontconfig1
-      - fontconfig-config
-      - fonts-dejavu-core
-      - fonts-liberation
-      - libfreetype6
-      - libpng16-16
-      - libx11-6
-      - libxrender1
-      - libxext6
-    autotools-configure-parameters:
-      - --prefix=/usr
-      - --with-cairo=yes
-      - --with-pangocairo=yes
-      - --enable-shared
+  # graphviz:
+  #   plugin: autotools
+  #   source-depth: 1
+  #   source: https://gitlab.com/graphviz/graphviz.git
+  #   source-tag: "14.1.2"
+  #   build-packages:
+  #     - build-essential
+  #     - cmake
+  #     - bison
+  #     - flex
+  #     - libexpat1-dev
+  #     - libgd-dev
+  #     - libcairo2-dev
+  #     - libpango1.0-dev
+  #     - libgts-dev
+  #     - pkg-config
+  #     - libfontconfig1-dev
+  #   stage-packages:
+  #     - libexpat1
+  #     - libgd3
+  #     - libcairo2
+  #     - libpango-1.0-0
+  #     - libpangocairo-1.0-0
+  #     - libgts-0.7-5
+  #     - libfontconfig1
+  #     - fontconfig-config
+  #     - fonts-dejavu-core
+  #     - fonts-liberation
+  #     - libfreetype6
+  #     - libpng16-16
+  #     - libx11-6
+  #     - libxrender1
+  #     - libxext6
+  #   autotools-configure-parameters:
+  #     - --prefix=/usr
+  #     - --with-cairo=yes
+  #     - --with-pangocairo=yes
+  #     - --enable-shared
   plantuml:
     plugin: nil
-    after: [graphviz]
+    # after: [graphviz]
     source: .
     build-packages:
       - curl
     stage-packages:
       - openjdk-25-jre
-      # - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz and core26 will finally update it.
+      - graphviz # TODO: Update core24 to core26 when available, since core24 has a very old version of graphviz and core26 will finally update it.
 
     override-build: bash scripts/build.bash
   plantuml-gui:
