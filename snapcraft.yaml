@@ -71,6 +71,7 @@ parts:
       - libpango1.0-dev
       - libgts-dev
       - pkg-config
+      - libfontconfig1-dev
     stage-packages:
       - libexpat1
       - libgd3
@@ -78,8 +79,20 @@ parts:
       - libpango-1.0-0
       - libpangocairo-1.0-0
       - libgts-0.7-5
+      - libfontconfig1
+      - fontconfig-config
+      - fonts-dejavu-core
+      - fonts-liberation
+      - libfreetype6
+      - libpng16-16
+      - libx11-6
+      - libxrender1
+      - libxext6
     autotools-configure-parameters:
       - --prefix=/usr
+      - --with-cairo=yes
+      - --with-pangocairo=yes
+      - --enable-shared
   plantuml:
     plugin: nil
     after: [graphviz]
