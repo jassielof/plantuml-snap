@@ -51,11 +51,8 @@ apps:
       - unity7
       - opengl
     environment:
-      PATH: $SNAP/usr/bin:$SNAP/usr/lib/jvm/java-25-openjdk-$SNAP_ARCH/bin:$PATH
+      PATH: $SNAP/usr/bin:$SNAP/usr/lib/jvm/java-25-openjdk-$CRAFT_ARCH_BUILD_FOR/bin:$PATH
       GRAPHVIZ_DOT: $SNAP/usr/bin/dot
-      # Full Java library path for GUI support
-      LD_LIBRARY_PATH: $SNAP/usr/lib/jvm/java-25-openjdk-$SNAP_ARCH/lib:$SNAP/usr/lib/jvm/java-25-openjdk-$SNAP_ARCH/lib/server:$SNAP/usr/lib/$SNAP_ARCH-linux-gnu:$LD_LIBRARY_PATH
-      _JAVA_AWT_WM_NONREPARENTING: "1"
 
 parts:
   graphviz:
@@ -127,8 +124,7 @@ parts:
     build-packages:
       - curl
     stage-packages:
-      # - openjdk-25-jre
-      - openjdk-25-jdk
+      - openjdk-25-jre
       - fontconfig
       - fontconfig-config
       - fonts-dejavu-core
@@ -178,6 +174,9 @@ parts:
 
       exec java -jar "$SNAP/jar/plantuml.jar" --gui "$@"
       EOF
+
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/plantuml-wrapper
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/plantuml-gui-wrapper
 
   plantuml-gui:
     plugin: dump
